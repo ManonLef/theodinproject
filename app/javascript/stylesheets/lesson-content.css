@@ -1,6 +1,6 @@
 @layer components {
   .lesson-content__panel {
-    @apply bg-gray-100 p-6 rounded-lg dark:bg-gray-800 dark:highlight-white;
+    @apply bg-gray-50 p-6 rounded-lg dark:bg-gray-800 dark:highlight-white;
   }
 
   .lesson-content__panel > *:first-child {
