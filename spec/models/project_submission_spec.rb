@@ -3,6 +3,8 @@ require 'rails_helper'
 RSpec.describe ProjectSubmission do
   subject(:project_submission) { create(:project_submission) }
 
+  it_behaves_like 'likeable', :project_submission
+
   it { is_expected.to belong_to(:user) }
   it { is_expected.to belong_to(:lesson) }
   it { is_expected.to have_many(:flags) }
@@ -24,7 +26,7 @@ RSpec.describe ProjectSubmission do
 
   context 'when live preview is not allowed' do
     subject(:project_submission) do
-      build(:project_submission, lesson: create(:lesson, has_live_preview: false))
+      build(:project_submission, lesson: create(:lesson, previewable: false))
     end
 
     it do
@@ -35,10 +37,11 @@ RSpec.describe ProjectSubmission do
   end
 
   describe '.only_public' do
-    it 'returns public project submissions' do
+    it 'returns public project submissions that have not been discarded' do
       public_project_submission_one = create(:project_submission)
       public_project_submission_two = create(:project_submission)
       create(:project_submission, is_public: false)
+      create(:project_submission, discarded_at: Time.zone.today)
 
       expect(described_class.only_public).to contain_exactly(
         public_project_submission_one,
